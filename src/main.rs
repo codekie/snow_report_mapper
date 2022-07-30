@@ -10,9 +10,12 @@
 //!
 //! 1. Filepath to the ServiceNOW export
 //! 2. Filepath to where the mapped report should be written to
+use crate::loaders::servicenow;
 use anyhow::{Context, Result};
 use serde_derive::{Deserialize, Serialize};
 use serde_json::Value;
+
+pub mod loaders;
 
 /// Context for the errors that may occur during parsing
 const ERR_MSG_UNABLE_TO_PROCESS_INPUT: &str = "Unable to process input file";
@@ -31,7 +34,7 @@ fn main() -> Result<()> {
     // Get filenames from the command line
     let (input_filename, output_filename) = get_filenames()?;
     // Load and parse input-file
-    let snow_report = load_and_parse(input_filename)?;
+    let snow_report = servicenow::load_incidents(input_filename)?;
     let result = map_data(&snow_report)?;
     write_result(&result, output_filename)?;
     println!("Finished");
@@ -77,27 +80,6 @@ fn get_filenames<'a>() -> Result<(String, String)> {
     }
     let output = args.next().context("Output filename is missing!")?;
     Ok((input, output))
-}
-
-/// Loads a JSON file and parses it to a JSON-`Value`
-///
-/// # Parameters
-///
-/// 1. File path to the input
-///
-/// # Returns
-///
-/// The parsed JSON-`Value`
-///
-/// # Bails out when
-///
-/// - Input file can't be read
-/// - Input file can't be parsed
-fn load_and_parse(filename: String) -> Result<Value> {
-    println!("Reading input file");
-    let text =
-        std::fs::read_to_string(&filename).with_context(|| format!("Can't read {}", &filename))?;
-    Ok(serde_json::from_str(&text).with_context(|| format!("Unable to parse '{}'", &filename))?)
 }
 
 /// Maps the ServiceNOW report data to OpenAI training data
