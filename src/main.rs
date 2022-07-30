@@ -10,11 +10,13 @@
 //!
 //! 1. Filepath to the ServiceNOW export
 //! 2. Filepath to where the mapped report should be written to
+
 use crate::loaders::servicenow;
 use anyhow::{Context, Result};
 use serde_derive::{Deserialize, Serialize};
 use serde_json::Value;
 
+pub mod cli;
 pub mod loaders;
 
 /// Context for the errors that may occur during parsing
@@ -30,13 +32,12 @@ struct OutputEntry<'a> {
 }
 
 fn main() -> Result<()> {
-    println!("Mapping SNOW data to OpenAI training data\n");
-    // Get filenames from the command line
-    let (input_filename, output_filename) = get_filenames()?;
+    let args: cli::Args = cli::parse();
+
     // Load and parse input-file
-    let snow_report = servicenow::load_incidents(input_filename)?;
+    let snow_report = servicenow::load_incidents(args.file_incidents)?;
     let result = map_data(&snow_report)?;
-    write_result(&result, output_filename)?;
+    write_result(&result, args.file_output)?;
     println!("Finished");
     Ok(())
 }
@@ -54,32 +55,6 @@ fn write_result<'a>(result: &Vec<OutputEntry>, filename: String) -> Result<()> {
         .with_context(|| format!("Failed to write to: '{}'", &filename))?;
     println!("{} entries written", &result.len());
     Ok(())
-}
-
-/// Gets the file paths to the input file and to the output file from the command line arguments
-///
-/// # Returns
-///
-/// Tuple with:
-///
-/// 1. Path to input file (ServiceNOW export)
-/// 2. Path to output file (OpenAI training data)
-///
-/// # Bails out when
-///
-/// - Input filename could not be found
-/// - Output filename could not be found
-fn get_filenames<'a>() -> Result<(String, String)> {
-    let mut args = std::env::args();
-    // First argument is the executable
-    args.next();
-    let mut input = args.next().context("Input filename is missing!")?;
-    // If called with `cargo run`, then the first argument is the main-crate
-    if input.ends_with("main.rs") {
-        input = args.next().context("Input filename is missing!")?;
-    }
-    let output = args.next().context("Output filename is missing!")?;
-    Ok((input, output))
 }
 
 /// Maps the ServiceNOW report data to OpenAI training data
