@@ -12,7 +12,7 @@
 //! 2. Filepath to where the mapped report should be written to
 
 use crate::loaders::servicenow;
-use anyhow::Result;
+use anyhow::{Context, Result};
 
 pub mod cli;
 pub mod loaders;
@@ -23,8 +23,10 @@ fn main() -> Result<()> {
     let args: cli::Args = cli::parse();
 
     // Load and parse input-file
-    let snow_report = servicenow::load_incidents(args.file_incidents)?;
-    let result = mappers::output::map_data(&snow_report)?;
+    let incidents_raw = std::fs::read_to_string(&args.file_incidents)
+        .with_context(|| format!("Can't read {}", &args.file_incidents))?;
+    let snow_report = servicenow::parse_incidents(&incidents_raw)?;
+    let result = mappers::output::map_data(&snow_report);
     writers::output::write_result(&result, args.file_output)?;
     println!("Finished");
     Ok(())
