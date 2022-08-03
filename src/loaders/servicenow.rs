@@ -1,4 +1,4 @@
-///! Loaders and structs for SNOW (ServiceNow) data exports
+/// Loaders and structs for SNOW (ServiceNow) data exports
 use crate::serializers::naive_datetime;
 use anyhow::{Context, Result};
 use chrono::NaiveDateTime;

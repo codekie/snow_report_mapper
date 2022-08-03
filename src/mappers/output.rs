@@ -9,8 +9,8 @@ use std::collections::HashMap;
 ///
 /// # See also
 ///
-/// - https://beta.openai.com/docs/guides/fine-tuning/data-formatting
-/// - https://beta.openai.com/docs/guides/fine-tuning/preparing-your-dataset
+/// - <https://beta.openai.com/docs/guides/fine-tuning/data-formatting>
+/// - <https://beta.openai.com/docs/guides/fine-tuning/preparing-your-dataset>
 #[derive(Serialize, Deserialize, Debug)]
 pub struct FineTuningEntry {
     /// Title of the ServiceNOW incident
@@ -86,6 +86,9 @@ fn create_assignment_group_lookup(
 /// Gets the name for the assigned group, of an incident
 ///
 /// # Arguments
+///
+/// - `entry`: Single ServiceNow incident
+/// - `lookup`: Lookup map between ID and name
 ///
 /// # Bails out when
 ///

@@ -1,4 +1,4 @@
-///! Creates files that can be used to fine tune OpenAI models
+/// Creates files that can be used to fine tune OpenAI models
 use crate::mappers::output::FineTuningEntry;
 use anyhow::{Context, Result};
 

@@ -3,9 +3,28 @@
 //!
 //! # Usage
 //!
-//! ```bash
-//! $ snow_report_mapper path_to_input_file path_to_output_file
 //! ```
+//! USAGE:
+//!     snow_report_mapper [OPTIONS] <FILE_INCIDENTS> <FILE_ASSIGNMENT_GROUPS> <FILE_OUTPUT>
+//!
+//! ARGS:
+//!     <FILE_INCIDENTS>            Filepath to the SNOW incidents export
+//!     <FILE_ASSIGNMENT_GROUPS>    Filepath to the SNOW export of the assignment groups
+//!     <FILE_OUTPUT>               Filepath where the mapped training file should be stored to
+//!
+//! OPTIONS:
+//!     -h, --help       Print help information
+//!     -s, --stats      Prints additional statistics
+//!     -v, --verbose    Verbose output
+//!     -V, --version    Print version information
+//! ```
+//!
+//! To get this help, run:
+//!
+//! ```bash
+//! $ snow_report_mapper --help
+//! ```
+//!
 //! ## Arguments:
 //!
 //! 1. Filepath to the ServiceNOW export

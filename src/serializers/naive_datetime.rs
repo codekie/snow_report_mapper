@@ -1,4 +1,4 @@
-///! Serde (de-)serializer for ISO 8601 "date and time"s without timezone
+/// Serde (de-)serializer for ISO 8601 "date and time"s without timezone
 use chrono::{DateTime, NaiveDateTime, Utc};
 use serde::de::Error;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};

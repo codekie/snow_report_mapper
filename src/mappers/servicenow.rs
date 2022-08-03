@@ -1,9 +1,9 @@
-///! Contains mapping functions that are related to SNOW (ServiceNow) data structures
+/// Contains mapping functions that are related to SNOW (ServiceNow) data structures
 use crate::servicenow::AssignmentGroup;
 use std::collections::HashMap;
 
 /// Creates a map for the internal SNOW assigment group id to an ID that is more suitable for fine tuning the OpenAI model
-/// (see: https://beta.openai.com/docs/guides/fine-tuning/case-study-categorization-for-email-triage).
+/// (see: <https://beta.openai.com/docs/guides/fine-tuning/case-study-categorization-for-email-triage>).
 ///
 /// To make sure that the generated ID does not change for existing assignment groups, when new ones are created, we sort
 /// by creation date of the assignment groups first, before we take the index of the position within the list, as ID.

@@ -1,4 +1,4 @@
-///! This module keeps and modifies statistics
+/// This module keeps and modifies statistics
 use std::cmp;
 use std::collections::HashMap;
 use termsize;
