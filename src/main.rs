@@ -55,6 +55,10 @@ fn main() -> Result<()> {
     if args.verbose {
         println!("{} incidents found", snow_report.len());
     }
+    let incidents_deduped = servicenow::deduped_incidents(snow_report);
+    if args.verbose {
+        println!("{} incidents left after de-duping", incidents_deduped.len());
+    }
     // Load, parse and map assignment groups
     let assignment_groups_raw = std::fs::read_to_string(&args.file_assignment_groups)
         .with_context(|| format!("Can't read {}", &args.file_incidents))?;
@@ -70,7 +74,7 @@ fn main() -> Result<()> {
         mappers::servicenow::map_assignment_groups(&mut assignment_groups);
     // Map and write output data
     let result = mappers::output::map_data(
-        &snow_report,
+        &incidents_deduped,
         &assignment_groups_indices,
         &assignment_groups,
         &mut stats,
