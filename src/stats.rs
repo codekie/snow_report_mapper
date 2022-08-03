@@ -8,12 +8,13 @@ const DEFAULT_MAX_WIDTH_HISTOGRAM: u16 = 80;
 
 /// Keeps statistics that were collected during the conversion
 #[derive(Clone)]
-pub struct Stats<'a> {
-    /// Distribution of keys, with occurrences
-    pub distribution: HashMap<&'a String, u16>,
+pub struct Stats {
+    /// Distribution of keys, with occurrences. The keys consist of the original key with the mapped
+    /// OpenAI category appended as suffix ` [ID]` Whereas `ID` is the numeric category-ID
+    pub distribution: HashMap<String, u16>,
 }
 
-impl<'a> Stats<'a> {
+impl<'a> Stats {
     pub fn new() -> Self {
         Stats {
             distribution: HashMap::new(),
@@ -25,9 +26,10 @@ impl<'a> Stats<'a> {
     /// # Arguments
     ///
     /// - `key`: Key which occurrence has to be increased
-    pub fn inc_distribution<'b>(&'b mut self, key: &'a String) {
-        let group_count = self.distribution.get(key).unwrap_or(&0);
-        self.distribution.insert(key, group_count + 1);
+    pub fn inc_distribution<'b>(&'b mut self, key: &'a String, category: usize) {
+        let display_name: String = format!("{} [{}]", key, category);
+        let group_count = self.distribution.get(&display_name).unwrap_or(&0);
+        self.distribution.insert(display_name, group_count + 1);
     }
 
     /// Prints stats to console.
@@ -59,8 +61,8 @@ fn get_terminal_width() -> u16 {
 /// # Arguments
 ///
 /// - `distribution`: distribution of keys
-fn print_key_histogram<'a>(distribution: &'a HashMap<&'a String, u16>) {
-    let mut ordered_entries: Vec<(&&'a String, &u16)> = distribution.iter().collect();
+fn print_key_histogram(distribution: &HashMap<String, u16>) {
+    let mut ordered_entries: Vec<(&String, &u16)> = distribution.iter().collect();
     ordered_entries.sort_by(|(_, amount1), (_, amount2)| amount2.cmp(amount1));
     let terminal_width = get_terminal_width();
     // Print header
@@ -98,7 +100,7 @@ fn print_key_histogram<'a>(distribution: &'a HashMap<&'a String, u16>) {
 ///
 /// - `max_key_len`: Length of the longest key
 /// - `max_amount`: Highest amount of occurrences
-fn get_max_values<'a>(entries: &Vec<(&&'a String, &u16)>) -> (u16, u16) {
+fn get_max_values<'a>(entries: &Vec<(&String, &u16)>) -> (u16, u16) {
     let mut max_key_len: u16 = 0;
     let mut max_amount: u16 = 0;
     for (name, amount) in entries {

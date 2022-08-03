@@ -11,6 +11,10 @@ use std::collections::HashMap;
 /// # Arguments
 ///
 /// - `assignment_groups`: The raw parsed assignment groups from the SNOW export
+///
+/// # Returns
+///
+/// Map with assignment ID as key and mapped ID which can be used for categorization with OpenAI
 pub fn map_assignment_groups(
     assignment_groups: &mut Vec<AssignmentGroup>,
 ) -> HashMap<String, usize> {

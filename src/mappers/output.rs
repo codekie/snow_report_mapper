@@ -39,7 +39,7 @@ pub fn map_data<'a, 'b>(
     incidents: &'a Vec<Incident>,
     assignment_groups_indices: &'a HashMap<String, usize>,
     assignment_groups: &'a Vec<AssignmentGroup>,
-    stats: &'b mut Stats<'a>,
+    stats: &'b mut Stats,
 ) -> anyhow::Result<Vec<FineTuningEntry>> {
     let mut result: Vec<FineTuningEntry> = Vec::new();
     let lookup = create_assignment_group_lookup(assignment_groups);
@@ -52,13 +52,14 @@ pub fn map_data<'a, 'b>(
                 &entry.assignment_group
             ))
         }
+        let category = *idx_assignment_group.unwrap();
         let group_name = get_group_name(entry, &lookup)?;
-        stats.inc_distribution(&group_name);
+        stats.inc_distribution(&group_name, category);
         result.push(FineTuningEntry {
             // See: https://beta.openai.com/docs/guides/fine-tuning/data-formatting
             prompt: format!("{}\n\n###\n\n", &entry.short_description).clone(),
             // The completion should be a string with a leading space
-            completion: format!(" {}", *idx_assignment_group.unwrap()).clone(),
+            completion: format!(" {}", category).clone(),
         })
     }
     Ok(result)

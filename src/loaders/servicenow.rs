@@ -74,7 +74,11 @@ pub fn parse_assignment_groups(input_raw: &str) -> Result<Vec<AssignmentGroup>> 
 ///
 /// # Arguments
 ///
+/// - `incidents`: All incidents
+///
 /// # Returns
+///
+/// De-duped list of incidents
 pub fn deduped_incidents(incidents: Vec<Incident>) -> Vec<Incident> {
     // De-duping incidents with duplicate incident titles (to also prevent to have titles assigned
     // to different groups)
