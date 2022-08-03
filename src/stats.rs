@@ -65,6 +65,7 @@ fn print_key_histogram(distribution: &HashMap<String, u16>) {
     let mut ordered_entries: Vec<(&String, &u16)> = distribution.iter().collect();
     ordered_entries.sort_by(|(_, amount1), (_, amount2)| amount2.cmp(amount1));
     let terminal_width = get_terminal_width();
+    println!("{} distinct categories are in use", ordered_entries.len());
     // Print header
     println!(
         "\n{:=^width$}",
