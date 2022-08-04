@@ -54,7 +54,7 @@ pub fn map_data<'a, 'b>(
         }
         let category = *idx_assignment_group.unwrap();
         let group_name = get_group_name(entry, &lookup)?;
-        stats.inc_distribution(&group_name, category);
+        stats.inc_distribution(group_name, category);
         result.push(FineTuningEntry {
             // See: https://beta.openai.com/docs/guides/fine-tuning/data-formatting
             prompt: format!("{}\n\n###\n\n", &entry.short_description).clone(),

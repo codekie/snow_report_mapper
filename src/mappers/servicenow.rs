@@ -19,10 +19,11 @@ pub fn map_assignment_groups(
     assignment_groups: &mut Vec<AssignmentGroup>,
 ) -> HashMap<String, usize> {
     let mut result = HashMap::new();
-    let mut idx: usize = 0;
-    for assignment_group in order_assignment_groups(assignment_groups) {
+    for (idx, assignment_group) in order_assignment_groups(assignment_groups)
+        .iter()
+        .enumerate()
+    {
         result.insert(assignment_group.sys_id.clone(), idx);
-        idx += 1;
     }
     result
 }

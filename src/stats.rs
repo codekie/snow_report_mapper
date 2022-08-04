@@ -1,7 +1,6 @@
 /// This module keeps and modifies statistics
 use std::cmp;
 use std::collections::HashMap;
-use termsize;
 
 /// If the terminal width can't be determined, use this width
 const DEFAULT_MAX_WIDTH_HISTOGRAM: u16 = 80;
@@ -39,7 +38,13 @@ impl<'a> Stats {
     /// - A histogram of the distribution of keys
     pub fn print_stats(&self) {
         print_key_histogram(&self.distribution);
-        print!("\n");
+        println!();
+    }
+}
+
+impl Default for Stats {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -101,7 +106,7 @@ fn print_key_histogram(distribution: &HashMap<String, u16>) {
 ///
 /// - `max_key_len`: Length of the longest key
 /// - `max_amount`: Highest amount of occurrences
-fn get_max_values<'a>(entries: &Vec<(&String, &u16)>) -> (u16, u16) {
+fn get_max_values(entries: &Vec<(&String, &u16)>) -> (u16, u16) {
     let mut max_key_len: u16 = 0;
     let mut max_amount: u16 = 0;
     for (name, amount) in entries {
