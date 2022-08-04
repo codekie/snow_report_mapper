@@ -26,6 +26,8 @@ pub struct FineTuningEntry {
 /// - `incidents`: Parsed ServiceNow incidents
 /// - `assignment_groups_indices`: Mapping between internal SNOW assignment group and processable OpenAI ID
 /// - `assignment_groups`: Parsed assignment groups
+/// - `trim`: The max amount of entries per assignment group, after which additional incidents will be dropped (to
+///   get a more even distribution
 /// - `stats`: Struct to hold mapping statistics
 ///
 /// # Returns
@@ -39,12 +41,24 @@ pub fn map_data<'a, 'b>(
     incidents: &'a Vec<Incident>,
     assignment_groups_indices: &'a HashMap<String, usize>,
     assignment_groups: &'a Vec<AssignmentGroup>,
+    trim: &Option<usize>,
     stats: &'b mut Stats,
 ) -> anyhow::Result<Vec<FineTuningEntry>> {
     let mut result: Vec<FineTuningEntry> = Vec::new();
     let lookup = create_assignment_group_lookup(assignment_groups);
+    let trim_unwrapped = trim.unwrap_or(0);
+    let mut distribution: HashMap<String, usize> = HashMap::new();
 
     for entry in incidents {
+        if trim.is_some() {
+            let mut count = *distribution.get(&entry.assignment_group).unwrap_or(&0);
+            if count == trim_unwrapped {
+                continue;
+            }
+            count += 1;
+            distribution.insert(entry.assignment_group.clone(), count);
+        }
+
         let idx_assignment_group = assignment_groups_indices.get(&entry.assignment_group);
         if idx_assignment_group.is_none() {
             bail!(format!(

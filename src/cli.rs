@@ -18,6 +18,9 @@ pub struct Args {
     /// Filepath where the mapped training file should be stored to
     #[clap(value_parser)]
     pub file_output: String,
+    /// Trim the amount of incidents per assigment group by the given amount
+    #[clap(short, long, value_parser)]
+    pub trim: Option<usize>,
     /// Verbose output
     #[clap(short, long)]
     pub verbose: bool,

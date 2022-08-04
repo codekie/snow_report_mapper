@@ -15,6 +15,8 @@ pub struct RunOptions {
     pub verbose: bool,
     /// Print statistics, collected during processing
     pub print_stats: bool,
+    /// Trim the amount of incidents per assigment group by the given amount
+    pub trim: Option<usize>,
 }
 
 /// Load and processes the raw input data and writes the processed output.
@@ -63,6 +65,7 @@ pub fn run(
         &incidents_deduped,
         &assignment_groups_indices,
         &assignment_groups,
+        &options.trim,
         &mut stats,
     )
     .context("An error has occured during creating the mapping")?;

@@ -53,6 +53,7 @@ fn main() -> Result<()> {
         RunOptions {
             verbose: args.verbose,
             print_stats: args.stats,
+            trim: args.trim,
         },
     )
 }
