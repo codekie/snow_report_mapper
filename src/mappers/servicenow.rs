@@ -14,7 +14,7 @@ use std::collections::HashMap;
 ///
 /// # Returns
 ///
-/// Map with assignment ID as key and mapped ID which can be used for categorization with OpenAI
+/// Map with assignment group ID as key and mapped ID which can be used for categorization with OpenAI
 pub fn map_assignment_groups(
     assignment_groups: &mut Vec<AssignmentGroup>,
 ) -> HashMap<String, usize> {

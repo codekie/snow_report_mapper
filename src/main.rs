@@ -34,7 +34,7 @@
 use crate::loaders::servicenow;
 use crate::stats::Stats;
 use anyhow::Result;
-use snow_report_mapper::{run, Options};
+use snow_report_mapper::{run, RunOptions};
 
 pub mod cli;
 pub mod loaders;
@@ -50,7 +50,7 @@ fn main() -> Result<()> {
         &args.file_incidents,
         &args.file_assignment_groups,
         &args.file_output,
-        Options {
+        RunOptions {
             verbose: args.verbose,
             print_stats: args.stats,
         },
